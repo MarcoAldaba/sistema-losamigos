@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import './App.css';
+import ProductosPage from './pages/ProductosPage';
 
 // Componente para proteger rutas
 function ProtectedRoute({ children }) {
@@ -25,16 +26,24 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
-                    <Route 
-                        path="/dashboard" 
+                    <Route
+                        path="/dashboard"
                         element={
                             <ProtectedRoute>
                                 <DashboardPage />
                             </ProtectedRoute>
-                        } 
+                        }
                     />
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="*" element={<Navigate to="/login" />} />
+                    <Route
+                        path="/productos"
+                        element={
+                            <ProtectedRoute>
+                                <ProductosPage />
+                            </ProtectedRoute>
+                        }
+                    />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
