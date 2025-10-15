@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
-// Ruta de prueba
-router.post('/login', (req, res) => {
-    res.json({ message: 'Ruta de login funcionando' });
-});
+// Ruta de login
+router.post('/login', authController.login);
 
-router.post('/register', (req, res) => {
-    res.json({ message: 'Ruta de registro funcionando' });
-});
+// Ruta protegida para obtener usuario actual
+router.get('/me', authController.verifyToken, authController.getCurrentUser);
 
 module.exports = router;

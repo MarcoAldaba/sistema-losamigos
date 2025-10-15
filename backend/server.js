@@ -5,8 +5,12 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
-app.use(cors());
+// ⚠️ IMPORTANTE: CORS debe estar ANTES de las rutas
+app.use(cors({
+    origin: 'http://localhost:5173', // Frontend
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -4,6 +4,7 @@
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); */
     padding: 20px;
 }
 
@@ -82,11 +83,20 @@ button[type="submit"]:disabled {
 .error-message {
     background: #fee;
     color: #c33;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     margin-bottom: 15px;
     text-align: center;
     font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #fcc;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
 }
 
 .login-info {
