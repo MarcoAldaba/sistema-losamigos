@@ -5,7 +5,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ⚠️ IMPORTANTE: CORS debe estar ANTES de las rutas
+// IMPORTANTE: CORS debe estar ANTES de las rutas
 app.use(cors({
     origin: 'http://localhost:5173', // Frontend
     credentials: true
@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/pedidos', require('./routes/pedidos'));
 app.use('/api/productos', require('./routes/productos'));
+app.use('/api/mesas', require('./routes/mesas'));
 
 // Ruta de prueba
 app.get('/', (req, res) => {
