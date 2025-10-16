@@ -11,10 +11,17 @@ const obtenerMesas = async (req, res) => {
                 m.estado,
                 m.updated_at,
                 p.id_pedido,
+                p.total,
+                p.estado as estado_pedido,
                 u.nombre as nombre_garzon
             FROM mesa m
-            LEFT JOIN pedido p ON m.id_mesa = p.id_mesa 
-                AND p.estado NOT IN ('pagado', 'cancelado')
+            LEFT JOIN LATERAL (
+                SELECT * FROM pedido 
+                WHERE id_mesa = m.id_mesa 
+                  AND estado NOT IN ('pagado', 'cancelado')
+                ORDER BY fecha_hora DESC
+                LIMIT 1
+            ) p ON true
             LEFT JOIN usuario u ON p.id_garzon = u.id_usuario
             ORDER BY m.numero
         `);
@@ -38,11 +45,17 @@ const obtenerMesaPorId = async (req, res) => {
                 m.*,
                 p.id_pedido,
                 p.total,
+                p.estado as estado_pedido,
                 p.fecha_hora,
                 u.nombre as nombre_garzon
             FROM mesa m
-            LEFT JOIN pedido p ON m.id_mesa = p.id_mesa 
-                AND p.estado NOT IN ('pagado', 'cancelado')
+            LEFT JOIN LATERAL (
+                SELECT * FROM pedido 
+                WHERE id_mesa = m.id_mesa 
+                  AND estado NOT IN ('pagado', 'cancelado')
+                ORDER BY fecha_hora DESC
+                LIMIT 1
+            ) p ON true
             LEFT JOIN usuario u ON p.id_garzon = u.id_usuario
             WHERE m.id_mesa = $1
         `, [id]);
@@ -61,28 +74,94 @@ const obtenerMesaPorId = async (req, res) => {
     }
 };
 
-// Cambiar estado de una mesa
-const cambiarEstadoMesa = async (req, res) => {
+// Abrir mesa (cambiar a ocupada y crear pedido)
+const abrirMesa = async (req, res) => {
     const client = await pool.connect();
     try {
         const { id } = req.params;
-        const { estado, id_garzon } = req.body;
+        const { id_garzon } = req.body;
 
-        // Validar estado
-        const estadosValidos = ['libre', 'ocupada', 'reservada'];
-        if (!estadosValidos.includes(estado)) {
-            return res.status(400).json({ 
-                error: 'Estado inválido',
-                estadosValidos 
-            });
+        if (!id_garzon) {
+            return res.status(400).json({ error: 'Se requiere id_garzon' });
         }
 
         await client.query('BEGIN');
 
-        // Actualizar estado de la mesa
+        // Verificar que la mesa esté libre
+        const mesaCheck = await client.query(
+            'SELECT estado FROM mesa WHERE id_mesa = $1',
+            [id]
+        );
+
+        if (mesaCheck.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Mesa no encontrada' });
+        }
+
+        if (mesaCheck.rows[0].estado !== 'libre') {
+            await client.query('ROLLBACK');
+            return res.status(400).json({ 
+                error: `La mesa está ${mesaCheck.rows[0].estado}. Solo se pueden abrir mesas libres.` 
+            });
+        }
+
+        // Actualizar estado a ocupada
+        await client.query(
+            'UPDATE mesa SET estado = $1, updated_at = CURRENT_TIMESTAMP WHERE id_mesa = $2',
+            ['ocupada', id]
+        );
+
+        // Crear nuevo pedido
+        const nuevoPedido = await client.query(`
+            INSERT INTO pedido (id_mesa, id_garzon, estado, total)
+            VALUES ($1, $2, 'pendiente', 0)
+            RETURNING *
+        `, [id, id_garzon]);
+
+        await client.query('COMMIT');
+
+        res.json({
+            mensaje: 'Mesa abierta correctamente',
+            pedido: nuevoPedido.rows[0]
+        });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error al abrir mesa:', error);
+        res.status(500).json({ 
+            error: 'Error al abrir mesa',
+            detalles: error.message 
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// Cerrar mesa (cambiar a libre)
+const cerrarMesa = async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { id } = req.params;
+
+        await client.query('BEGIN');
+
+        // Verificar que no tenga pedidos activos
+        const pedidoActivo = await client.query(`
+            SELECT id_pedido, estado FROM pedido 
+            WHERE id_mesa = $1 AND estado NOT IN ('pagado', 'cancelado')
+        `, [id]);
+
+        if (pedidoActivo.rows.length > 0) {
+            await client.query('ROLLBACK');
+            return res.status(400).json({ 
+                error: 'No se puede cerrar la mesa. Tiene pedidos activos.',
+                pedido_activo: pedidoActivo.rows[0]
+            });
+        }
+
+        // Cambiar estado a libre
         const result = await client.query(
             'UPDATE mesa SET estado = $1, updated_at = CURRENT_TIMESTAMP WHERE id_mesa = $2 RETURNING *',
-            [estado, id]
+            ['libre', id]
         );
 
         if (result.rows.length === 0) {
@@ -90,44 +169,48 @@ const cambiarEstadoMesa = async (req, res) => {
             return res.status(404).json({ error: 'Mesa no encontrada' });
         }
 
-        // Si la mesa pasa a "ocupada", crear un nuevo pedido
-        if (estado === 'ocupada' && id_garzon) {
-            await client.query(`
-                INSERT INTO pedido (id_mesa, id_garzon, estado, total)
-                VALUES ($1, $2, 'pendiente', 0)
-            `, [id, id_garzon]);
-        }
-
-        // Si la mesa pasa a "libre", verificar que no tenga pedidos activos
-        if (estado === 'libre') {
-            const pedidoActivo = await client.query(`
-                SELECT id_pedido FROM pedido 
-                WHERE id_mesa = $1 AND estado NOT IN ('pagado', 'cancelado')
-            `, [id]);
-
-            if (pedidoActivo.rows.length > 0) {
-                await client.query('ROLLBACK');
-                return res.status(400).json({ 
-                    error: 'No se puede liberar la mesa. Tiene pedidos activos.' 
-                });
-            }
-        }
-
         await client.query('COMMIT');
 
         res.json({
-            mensaje: 'Estado de mesa actualizado correctamente',
+            mensaje: 'Mesa cerrada correctamente',
             mesa: result.rows[0]
         });
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('Error al cambiar estado de mesa:', error);
+        console.error('Error al cerrar mesa:', error);
         res.status(500).json({ 
-            error: 'Error al cambiar estado de mesa',
+            error: 'Error al cerrar mesa',
             detalles: error.message 
         });
     } finally {
         client.release();
+    }
+};
+
+// Reservar mesa
+const reservarMesa = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await pool.query(
+            'UPDATE mesa SET estado = $1, updated_at = CURRENT_TIMESTAMP WHERE id_mesa = $2 RETURNING *',
+            ['reservada', id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Mesa no encontrada' });
+        }
+
+        res.json({
+            mensaje: 'Mesa reservada correctamente',
+            mesa: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Error al reservar mesa:', error);
+        res.status(500).json({ 
+            error: 'Error al reservar mesa',
+            detalles: error.message 
+        });
     }
 };
 
@@ -156,6 +239,8 @@ const obtenerEstadisticas = async (req, res) => {
 module.exports = {
     obtenerMesas,
     obtenerMesaPorId,
-    cambiarEstadoMesa,
+    abrirMesa,
+    cerrarMesa,
+    reservarMesa,
     obtenerEstadisticas
 };
