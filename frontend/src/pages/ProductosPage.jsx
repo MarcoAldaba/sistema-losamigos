@@ -72,18 +72,6 @@ function ProductosPage() {
 
     return (
         <div className="productos-page">
-            {/* Header */}
-            <header className="header">
-                <div className="header-content">
-                    <h1>🍽️ Los Amigos</h1>
-                    <div className="header-user">
-                        <span>{user?.nombre} ({user?.rol})</span>
-                        <button onClick={handleLogout} className="btn-logout">
-                            Salir
-                        </button>
-                    </div>
-                </div>
-            </header>
 
             {/* Filtros */}
             <div className="filtros">

@@ -1,0 +1,244 @@
+@import './variables.css';
+
+.navbar {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+/* Logo */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--white);
+  gap: 12px;
+}
+
+.navbar-logo {
+  height: 55px; /* Antes 50 */
+  width: auto;
+  display: block;
+}
+
+.navbar-logo-fallback {
+  font-size: 24px;
+  font-weight: bold;
+  display: none;
+}
+
+.navbar-logo:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Menu Desktop */
+.navbar-menu {
+  display: none;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.navbar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navbar-item:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.navbar-item.active {
+  background: var(--accent);
+}
+
+.navbar-icon {
+  font-size: 18px;
+}
+
+/* Usuario y Logout */
+.navbar-user {
+  display: none;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.logout-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Hamburger Menu */
+.navbar-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 10;
+}
+
+.navbar-toggle span {
+  width: 28px;
+  height: 3px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+.navbar-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.navbar-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Menu Mobile */
+.navbar-mobile {
+  display: flex;
+  flex-direction: column;
+  background: var(--primary-dark);
+  padding: 15px;
+  gap: 5px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar-mobile-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.navbar-mobile-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.navbar-mobile-item.active {
+  background: var(--accent);
+}
+
+.navbar-mobile-logout {
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Responsive Desktop */
+@media (min-width: 992px) {
+  .navbar-menu {
+    display: flex;
+  }
+
+  .navbar-user {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: none;
+  }
+
+  .navbar-mobile {
+    display: none;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 991px) {
+  .navbar-menu {
+    display: flex;
+  }
+  
+  .navbar-item .navbar-label {
+    display: none;
+  }
+  
+  .navbar-item {
+    padding: 10px;
+  }
+}

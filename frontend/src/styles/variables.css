@@ -1,0 +1,41 @@
+/* ============================================
+   VARIABLES GLOBALES - PALETA LOS AMIGOS
+   ============================================ */
+
+:root {
+  /* Colores principales del logo */
+  --primary: #1B2951;           /* Azul marino oscuro (fondo logo) */
+  --primary-dark: #0f1a36;      /* Azul más oscuro para hover */
+  --accent: #da1c22;            /* Rojo vibrante (texto logo) */
+  --accent-hover: #b71820;      /* Rojo oscuro para hover */
+  --secondary: #F9D71C;         /* Amarillo/Dorado (cubiertos) */
+  --success: #2E8B57;           /* Verde (detalles chef) */
+  --success-light: #d4edda;     /* Verde claro para fondos */
+  
+  /* Colores neutros */
+  --white: #FFFFFF;
+  --light-bg: #F5F7FA;
+  --light-gray: #ECF0F1;
+  --border: #BDC3C7;
+  --text-dark: #2C3E50;
+  --text-light: #7F8C8D;
+  --text-muted: #95A5A6;
+  
+  /* Colores de estado */
+  --danger: #da1c22;            /* Usamos el rojo del logo */
+  --warning: #F9D71C;           /* Usamos el amarillo del logo */
+  --info: #3498DB;
+  
+  /* Sombras */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.15);
+  
+  /* Bordes */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  
+  /* Transiciones */
+  --transition: all 0.3s ease;
+}

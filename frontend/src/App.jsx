@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import './App.css';
 import ProductosPage from './pages/ProductosPage';
+import Layout from './components/Layout';
+import './App.css';
 
 // Componente para proteger rutas
 function ProtectedRoute({ children }) {
@@ -25,25 +26,25 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
+                    {/* Ruta pública de login */}
                     <Route path="/login" element={<LoginPage />} />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <DashboardPage />
-                            </ProtectedRoute>
-                        }
-                    />
                     <Route path="/" element={<Navigate to="/login" />} />
-                    <Route path="*" element={<Navigate to="/login" />} />
-                    <Route
-                        path="/productos"
+
+                    {/* Rutas protegidas con Layout (Sidebar) */}
+                    <Route 
                         element={
                             <ProtectedRoute>
-                                <ProductosPage />
+                                <Layout />
                             </ProtectedRoute>
                         }
-                    />
+                    >
+                        <Route path="/dashboard" element={<DashboardPage />} />
+                        <Route path="/productos" element={<ProductosPage />} />
+                        {/* Aquí irán más rutas: /mesas, /pedidos, etc. */}
+                    </Route>
+
+                    {/* Redirección por defecto */}
+                    <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
