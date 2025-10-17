@@ -19,6 +19,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/pedidos', require('./routes/pedidos'));
 app.use('/api/productos', require('./routes/productos'));
 app.use('/api/mesas', require('./routes/mesas'));
+app.use('/api/usuarios', require('./routes/usuarios'));
 
 // Ruta de prueba
 app.get('/', (req, res) => {

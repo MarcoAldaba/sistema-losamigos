@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductosPage from './pages/ProductosPage';
+import MesasPage from './pages/MesasPage';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -40,6 +41,7 @@ function App() {
                     >
                         <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/productos" element={<ProductosPage />} />
+                        <Route path="/mesas" element={<MesasPage />} />
                         {/* Aquí irán más rutas: /mesas, /pedidos, etc. */}
                     </Route>
 

@@ -1,0 +1,399 @@
+@import './variables.css';
+
+.mesas-page {
+  padding: 0;
+}
+
+/* Estadísticas */
+.mesas-estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow-sm);
+  /* border-left: 4px solid var(--primary); */
+}
+
+.stat-card.stat-libres {
+  border-left-color: var(--danger);
+}
+
+.stat-card.stat-ocupadas {
+  border-left-color: var(--danger);
+}
+
+.stat-card.stat-reservadas {
+  border-left-color: var(--danger);
+}
+
+.stat-icon {
+  font-size: 40px;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Filtros */
+.mesas-filtros {
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 25px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mesas-filtros h2 {
+  margin: 0 0 15px 0;
+  color: var(--text-dark);
+}
+
+.filtros-botones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filtros-botones button {
+  padding: 10px 20px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--text-dark);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.filtros-botones button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filtros-botones button.active {
+  background: var(--accent);
+  color: var(--white);
+  border-color: var(--accent);
+}
+
+/* Grid de Mesas */
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.mesa-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mesa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Estados de mesa */
+.mesa-libre {
+  border-color: var(--success);
+}
+
+.mesa-ocupada {
+  border-color: var(--danger);
+  background: #fff5f5;
+}
+
+.mesa-reservada {
+  border-color: var(--warning);
+  background: #fffef0;
+}
+
+.mesa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--light-gray);
+}
+
+.mesa-numero {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.mesa-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-libre {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badge-ocupada {
+  background: #fadbd8;
+  color: var(--danger);
+}
+
+.badge-reservada {
+  background: #fff9db;
+  color: #d97706;
+}
+
+.mesa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.info-icon {
+  font-size: 16px;
+}
+
+.mesa-acciones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 100px;
+}
+
+.btn-abrir {
+  background: var(--success);
+  color: var(--white);
+}
+
+.btn-abrir:hover {
+  background: #25724a;
+  transform: translateY(-2px);
+}
+
+.btn-cerrar {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.btn-cerrar:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.btn-reservar {
+  background: var(--warning);
+  color: var(--text-dark);
+}
+
+.btn-reservar:hover {
+  background: #d97706;
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.btn-ver {
+  background: var(--info);
+  color: var(--white);
+}
+
+.btn-ver:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 2px solid var(--light-gray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: var(--primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--danger);
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.form-group {
+  margin-top: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--white);
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 2px solid var(--light-gray);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-cancelar {
+  background: var(--light-gray);
+  color: var(--text-dark);
+}
+
+.btn-cancelar:hover {
+  background: var(--border);
+}
+
+.btn-confirmar {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.btn-confirmar:hover {
+  background: var(--accent-hover);
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: var(--text-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mesas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mesa-acciones {
+    flex-direction: column;
+  }
+
+  .btn {
+    min-width: 100%;
+  }
+}
